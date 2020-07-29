@@ -1,22 +1,22 @@
 import time
-import cv2
+import cv2  #pip install opencv python
 import mss
 import numpy
-import keys
-import mytime
+import keys #keys.py required
+import mytime #mytiime.py required
 
-SCREEN_CAPTURE_AREA={'top': 80, 'left': 80, 'width': 1280, 'height': 720}
-OUTPUT_IMAGE_RESOLUTION=(400,300)
-MASTER_FOLDER_DIRECTORY=r'E:\AI DATA\DATA'
-START_or_PAUSE_RECORDING_KEY='spacebar'
-KEYS_TO_RECORD=['w','a','s','d']
-AUTOSAVE_AFTER_n_FRAMES=2000
-SHOW_RECORDING_WINDOW=False
-RECORD_AT=1
-FILE_NAME='data'
-ENABLE_AUTO_SAVE=True
-PLAY_FORWARD_KEY='l'
-PLAY_BACK_KEY='k'
+SCREEN_CAPTURE_AREA={'top': 80, 'left': 80, 'width': 1280, 'height': 720} #Specify the screen area to capture
+OUTPUT_IMAGE_RESOLUTION=(400,300) #specify at what resolution to capture
+MASTER_FOLDER_DIRECTORY=r'E:\AI DATA\DATA' #specify the folder directory to store data to
+START_or_PAUSE_RECORDING_KEY='spacebar' #set start or pause key __ view VKkeycode in keys.py for all supported keys which you can use
+KEYS_TO_RECORD=['w','a','s','d'] #set the keystorkes to record 
+AUTOSAVE_AFTER_n_FRAMES=2000 #set the number of frames to be recorded per file saved
+SHOW_RECORDING_WINDOW=False  #shows the recording window
+RECORD_AT=1 # records at a specified fps __ 1 to record at 30 fps __ 15 to record at 15 fps
+FILE_NAME='data' # the name of the recorded files
+ENABLE_AUTO_SAVE=True # auto saves files after every 2000 frames recorded without disturbing the user while recording
+PLAY_FORWARD_KEY='l' #used to view the recorded frames while paused
+PLAY_BACK_KEY='k' #used to view the recorded frames while paused
 
 command=None
 pause=False
