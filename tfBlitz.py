@@ -2,6 +2,11 @@ import tensorflow as tf
 import os
 import glob
 import numpy as np
+from random import shuffle
+import datetime
+import time
+from contextlib import redirect_stdout
+from tensorflow import keras
 
 # use single folder directory for a single data type
 # only one tfinfo.txt file is created for a single data type in a single folder directory
@@ -19,7 +24,7 @@ parse_parms={}
 # Eg: for n elements A,B,C...etc of shapes (xxx,yyy),(xx,yy),(aaa,fff)...etc and dtypes float32,int64,int32... etc
 # THEN tffile=['0_(xxx,yyy)_float32','1_(xx,yy)_int64','2_(aaa,fff)_int32', . . . etc upto nth element]
 # Incase if you dont know how to find dtype or shape use print(X.dtype) , print(X.shape) for nparrays
-# >>> uint8 and (800,600)
+
 
 
 
@@ -28,6 +33,34 @@ parse_parms={}
 #     'BATCH_SIZE':40,
 #     'PREFETCH_NUM_OF_BATCHES':2 -->> prefetchs 2 batches into GPU memory which is 40x2 elements
 # }
+
+def tfwrite(filepath,data,firstloop):
+    tfrecordwriter = tf.io.TFRecordWriter(f'{filepath}.tfrecord')
+    info=[]
+    for i in data:
+
+        features = {}
+
+        count = 0
+        for array in i:
+            shape = array.shape
+            dtype = array.dtype
+            if firstloop == True:
+                info.append(f'{count}_{shape}_{dtype}')
+            features.update({f'array{count}': _bytes_feature(array.tostring())})
+            count = count + 1
+
+        example = tf.train.Example(features=tf.train.Features(feature=features))
+        tfrecordwriter.write(example.SerializeToString())
+
+        if firstloop == True:
+            with open(f'{os.path.dirname(filepath)}\\tfDATAinfo.txt', 'w') as f:
+                for lines in info:
+                    f.write(lines + '\n')
+            firstloop=False
+
+    tfrecordwriter.close()
+    return
 
 def listdevices(deviceslist):
     info=[]
@@ -46,8 +79,10 @@ def _bytes_feature(value):
     return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
 
 def parsefunction(example_proto):
-    print('----->>>  EXAMPLE PROTO  <<<-----')
+    print('==============================================================================')
+    print('----------> >>  EXAMPLE DATA FORMAT USED  << <----------')
     print(example_proto)
+    print('')
     features={}
 
     for line in tffile:
@@ -57,6 +92,8 @@ def parsefunction(example_proto):
     parsed_features = tf.io.parse_single_example(example_proto, features)
 
     elements=[]
+
+    print('----------> >>  EXPECTED DATA TO BE FED INTO THE PIPELINE  << <----------')
 
     for line in tffile:
         shapelist = []
@@ -86,10 +123,12 @@ def parsefunction(example_proto):
         elif dtype=='complex128':
             array=tf.io.decode_raw(array,tf.complex128)
         else:
-            print(f'UN-KNOWN DTYPE -- {dtype} -- FOUND')
-            print('UPDATE THIS DTYPE IN tfBlitz.py under def parsefunction(example_proto)')
+            print(f'UN-KNOWN DTYPE {dtype} FOUND')
+            print('UPDATE THIS DTYPE IN tfBlitz.py under def parsefunction(example_proto) UNDER DTYPE FUNCTIONS')
 
         array=tf.reshape(array,shape=shape)
+#######################################################################################################
+########################## TF.FLOAT32 IS BETTER THAN TF.FLOAT16 #######################################
 
         if parse_parms['normalize']==True:
             if dtype=='uint8':
@@ -98,18 +137,66 @@ def parsefunction(example_proto):
                 array=tf.cast(tf.divide(array,1),tf.float32)
             else:
                 print(f'UN-KNOWN DTYPE -- {dtype} -- FOUND')
-                print('UPDATE THIS DTYPE IN tfBlitz.py under def parsefunction(example_proto)')
+                print('UPDATE THIS DTYPE IN tfBlitz.py under def parsefunction(example_proto) UNDER NORMALIZATION FUNCTIONS')
+
+#######################################################################################################
 
         elements.append(array)
     returns=[]
 
-    output=tf.stack([elements[1],elements[2]])
+    x=parse_parms['X']
+    y=parse_parms['Y']
 
-    returns.append(elements[0])
-    returns.append(output)
-    print('----->>>  SYMBOLIC TENSORS  <<<-----')
+    print('')
+    print('----------> >>  DATA TO STACK  << <----------')
+    print(f'INPUT OR X = STACK DATA INDEXES {x}')
+    print(f'OUTPUT OR Y = STACK DATA INDEXES {y}')
+    print('')
+
+    if x==(None) and y==(None):
+        for i in elements:
+            returns.append(i)
+
+    elif isinstance(x,int) and isinstance(y,int):
+        returns.append(elements[x])
+        returns.append(elements[y])
+
+    elif isinstance(x,int) and len(y)>1:
+        returns.append(elements[x])
+        stack=[]
+        for i in y:
+            stack.append(elements[i])
+        returns.append(tf.stack(stack))
+
+    elif len(x)>1 and isinstance(y,int):
+        stack=[]
+        for i in x:
+            stack.append(elements[i])
+        returns.append(tf.stack(stack))
+        returns.append(elements[y])
+
+    elif len(x)>1 and len(y)>1:
+        stack=[]
+        for i in x:
+            stack.append(elements[i])
+        returns.append(tf.stack(stack))
+        stack=[]
+        for i in y:
+            stack.append(elements[i])
+        returns.append(tf.stack(stack))
+
+    else:
+        print('ERROR AT STACK FUNCTIONS IN TFBLITZ.PY DEF PARSE FUNCTION')
+
+    # output=tf.stack([elements[1],elements[2]])
+    # output=elements[1]
+    # returns.append(elements[0])
+    # returns.append(output)
+
+    print('----------> >>  FINAL DATA TO COME OUT OF THE PIPELINE  << <----------')
     for i in returns:
         print(i)
+    print('')
 
     returns=tuple(returns)
     tffile.clear()
@@ -118,7 +205,6 @@ def parsefunction(example_proto):
 
 def generatetfrecords(datafilepath,tfrecordsfilepath):
     firstloop = True
-    info=[]
 
     paths=glob.glob(f'{datafilepath}\\*.npy')
     try:
@@ -137,48 +223,43 @@ def generatetfrecords(datafilepath,tfrecordsfilepath):
     print('FILES_LEFT : '+ str(filecount))
 
     for path in paths:
-        data=os.path.basename(path)
-
-        tfrecordwriter = tf.io.TFRecordWriter(f'{tfrecordsfilepath}\\{data[:-4]}.tfrecord')
-
+        dataname = os.path.basename(path)
+        dataname=dataname[:-4]
         data = np.load(path, allow_pickle=True)
+        filepath=f'{tfrecordsfilepath}\\{dataname}'
+
+        tfwrite(filepath,data,firstloop)
 
 
-        for i in data:
+        if firstloop == True:
+                firstloop = False
 
-            features = {}
 
-            count = 0
-            for array in i:
-                shape=array.shape
-                dtype=array.dtype
-                if firstloop==True:
-                    info.append(f'{count}_{shape}_{dtype}')
-                features.update({f'array{count}': _bytes_feature(array.tostring())})
-                count = count + 1
-
-            if firstloop==True:
-                with open(f'{tfrecordsfilepath}\\tfDATAinfo.txt', 'w') as f:
-                    for lines in info:
-                        f.write(lines+'\n')
-                    firstloop=False
-
-            example=tf.train.Example(features=tf.train.Features(feature=features))
-            tfrecordwriter.write(example.SerializeToString())
         with open(f'{tfrecordsfilepath}\\tfPATHinfo.txt', 'a') as f:
             f.write(path + '\n')
 
-        tfrecordwriter.close()
         filecount=filecount-1
         print(str(filecount)+' FILES_LEFT ')
     return
 
-def dataset(tfrecordsfilepath,tweaks=None,normalize=False):
+def dataset(tfrecordsfilepath,tweaks=None,normalize=False,stack_X=(None),stack_Y=(None)):
 
     parse_parms.update({'normalize':normalize})
+    parse_parms.update({'X':stack_X})
+    parse_parms.update({'Y':stack_Y})
 
-    tfpaths=glob.glob(tfrecordsfilepath+'\\*.tfrecord')
-    txtpath=tfrecordsfilepath+'\\tfDATAinfo.txt'
+    if type(tfrecordsfilepath) is str:
+        tfpaths=glob.glob(tfrecordsfilepath+'\\*.tfrecord')
+        txtpath = tfrecordsfilepath + '\\tfDATAinfo.txt'
+
+    elif type(tfrecordsfilepath) is list:
+        tfpaths=tfrecordsfilepath
+        filepath=os.path.dirname(tfpaths[0])
+        txtpath=filepath + '\\tfDATAinfo.txt'
+    else:
+        print('TF-FILE-PATHS-ERROR')
+        txtpath=None
+        tfpaths=None
 
     with open(txtpath, "r") as a_file:
         for line in a_file:
@@ -218,3 +299,81 @@ def setmemorylimit(memory=6144):
         except RuntimeError as e:
             print(e)
 
+def train_test_datasets(tfrecordsfilepath,tweaks=None,normalize=False,validation_files_split=0.05,stack_X=(0),stack_Y=(1)):
+
+    tfpaths=glob.glob(f'{tfrecordsfilepath}\\*.tfrecord')
+
+    shuffle(tfpaths)
+    shuffle(tfpaths)
+
+    numoffiles=len(tfpaths)
+    splitindex=int(numoffiles*validation_files_split)
+
+    val_tffiles=tfpaths[:splitindex]
+    train_tffiles=tfpaths[splitindex:]
+
+    train_dataset=dataset(train_tffiles,tweaks,normalize,stack_X,stack_Y)
+    test_dataset=dataset(val_tffiles,tweaks,normalize,stack_X,stack_Y)
+
+    return train_dataset,test_dataset
+
+def getdateandtime(timestamp_in_sec=None):
+    if timestamp_in_sec==None:
+        timestamp_in_sec=time.time()
+    dateandtime = str(datetime.datetime.fromtimestamp(timestamp_in_sec))
+    dateandtime = list(dateandtime)
+    dateandtime[10] = '_'
+    dateandtime[13] = '-'
+    dateandtime[16] = '-'
+    dateandtime[19] = '_'
+
+    string = ''
+    for i in dateandtime:
+        string = string + i
+    return string
+
+def getpaths(from_directory,to_directory,filetype0='npy',filetype1='tfrecord'):
+    frompaths=glob.glob(f'{from_directory}\\*.{filetype0}')
+    topaths=glob.glob(f'{to_directory}\\*.{filetype1}')
+
+    from_names=[]
+    to_names=[]
+
+    for path in frompaths:
+        name=os.path.basename(path)
+        name,filetype=name.split('.')
+        from_names.append(name)
+
+    for path in topaths:
+        name = os.path.basename(path)
+        name, filetype = name.split('.')
+        to_names.append(name)
+
+    for name in to_names:
+        try:
+            from_names.remove(name)
+        except:
+            pass
+
+    from_paths=[]
+
+    for name in from_names:
+        from_paths.append(f'{from_directory}\\{name}.{filetype0}')
+
+    return from_paths
+
+def Save(model,filepath,additional_info=None):
+
+    model.save(
+        filepath, overwrite=True, include_optimizer=True, save_format=None,
+        signatures=None, options=None
+    )
+
+    with open(f'{filepath}\\modelsummary.txt', 'w') as f:
+        with redirect_stdout(f):
+            model.summary()
+
+        if additional_info!=None:
+            f.write(str(additional_info))
+
+    return
