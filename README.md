@@ -1,7 +1,7 @@
 SELF DRIVING CAR PROJECT IN GTA V. 
 
 1. run recorddata.py and record the game data with leystrokes.
-2. run RUN.py to clean, balance/process and train the model.
+2. run RUN.py to clean, balance/process the data and train the model.
 3. run predictmodel.py to test the trained models.
 
 ALL THE INSTRUCTIONS CAN BE FOUND IN THE ABOVE FILES.
