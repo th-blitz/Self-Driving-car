@@ -5,7 +5,6 @@ from random import shuffle
 import cv2
 import random
 import time
-import mytime
 
 def addframes(data):
     sequence=2
