@@ -1,4 +1,4 @@
-SELF DRIVING CAR PROJECT IN GTA V. 
+SELF DRIVING CAR PROJECT IN GTA V
 
 1. run recorddata.py and record the game data with leystrokes.
 2. run RUN.py to clean, balance/process the data and train the model.
