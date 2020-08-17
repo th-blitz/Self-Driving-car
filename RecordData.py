@@ -3,7 +3,7 @@ import cv2  #pip install opencv python
 import mss
 import numpy
 import keys #keys.py required
-import mytime #mytiime.py required
+import tfBlitz #mytiime.py required
 
 SCREEN_CAPTURE_AREA={'top': 80, 'left': 80, 'width': 1280, 'height': 720} #Specify the screen area to capture
 OUTPUT_IMAGE_RESOLUTION=(400,300) #specify at what resolution to capture
@@ -78,7 +78,7 @@ with mss.mss() as sct:
                         command='y'
                     if command=='y':
                         print('SAVING.....')
-                        dateandtime=mytime.getdateandtime(time.time())
+                        dateandtime=tfBlitz.getdateandtime(time.time())
                         datafile=[]
                         img_data2=[]
                         count=0
