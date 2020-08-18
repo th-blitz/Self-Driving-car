@@ -4,7 +4,7 @@ SELF DRIVING CAR PROJECT IN GTA V
 2. run RUN.py to clean, balance/process the data and train the model.
 3. run predictmodel.py to test the trained models.
 
---->> USE THE ABOVE ANACONDA ENVIRONMENT 
+--->> USE THE ABOVE ANACONDA ENVIRONMENT environment.yml file. 
 
 ALL THE INSTRUCTIONS CAN BE FOUND IN THE ABOVE FILES.
 
