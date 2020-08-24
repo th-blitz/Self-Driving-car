@@ -10,7 +10,7 @@ USE THE ABOVE ANACONDA ENVIRONMENT environment.yml file.
 _______________________________________________________________________________________
 # CHECK OUT 
 
-    https://www.youtube.com/watch?v=CtJixj72qYg
+    [Trained with 120K training labels](https://www.youtube.com/watch?v=CtJixj72qYg)
 
     https://www.youtube.com/watch?v=cTnjW0aHlnY&feature=youtu.be
       
