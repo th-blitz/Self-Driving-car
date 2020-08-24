@@ -10,11 +10,11 @@ USE THE ABOVE ANACONDA ENVIRONMENT environment.yml file.
 _______________________________________________________________________________________
 # CHECK OUT 
 
-    [Trained with 120K training labels](https://www.youtube.com/watch?v=CtJixj72qYg)
+*   [Trained with 120K training labels](https://www.youtube.com/watch?v=CtJixj72qYg)
 
-    https://www.youtube.com/watch?v=cTnjW0aHlnY&feature=youtu.be
+*   [Click here](https://www.youtube.com/watch?v=cTnjW0aHlnY&feature=youtu.be)
       
-    https://www.youtube.com/watch?v=C73QPAovX-E&feature=youtu.be  
+*   [Click here](https://www.youtube.com/watch?v=C73QPAovX-E&feature=youtu.be)  
 
 _______________________________________________________________________________________
 MOTIVATED BY SENTDEX pyGTA5 series
