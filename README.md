@@ -19,7 +19,7 @@ ________________________________________________________________________________
 _______________________________________________________________________________________
 MOTIVATED BY SENTDEX pyGTA5 series
 
-    https://www.youtube.com/watch?v=ks4MPfMq8aQ&list=PLQVvvaa0QuDeETZEOy4VdocT7TOjfSA8a  
+--->> [Check out his PY_GTA5 Seris](https://www.youtube.com/watch?v=ks4MPfMq8aQ&list=PLQVvvaa0QuDeETZEOy4VdocT7TOjfSA8a)  
     
 DIRECTKEYS.PY CODE FROM SENTDEX PYGTA5 SERIES
 
