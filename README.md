@@ -1,18 +1,18 @@
-SELF DRIVING CAR PROJECT IN GTA V
+# SELF DRIVING CAR PROJECT IN GTA V
 
-1. run recorddata.py and record the game data with leystrokes.
-2. run RUN.py to clean, balance/process the data and train the model.
-3. run predictmodel.py to test the trained models.
+    1. run recorddata.py and record the game data with leystrokes.
+    2. run RUN.py to clean, balance/process the data and train the model.
+    3. run predictmodel.py to test the trained models.
 
---->> USE THE ABOVE ANACONDA ENVIRONMENT environment.yml file. 
+# --->> USE THE ABOVE ANACONDA ENVIRONMENT environment.yml file. 
 
 ALL THE INSTRUCTIONS CAN BE FOUND IN THE ABOVE FILES.
 
-https://www.youtube.com/watch?v=CtJixj72qYg
+    https://www.youtube.com/watch?v=CtJixj72qYg
 
-https://www.youtube.com/watch?v=cTnjW0aHlnY&feature=youtu.be
+    https://www.youtube.com/watch?v=cTnjW0aHlnY&feature=youtu.be
       
-https://www.youtube.com/watch?v=C73QPAovX-E&feature=youtu.be  
+    https://www.youtube.com/watch?v=C73QPAovX-E&feature=youtu.be  
 
 
 
