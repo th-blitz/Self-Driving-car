@@ -17,9 +17,10 @@ ________________________________________________________________________________
 *   [Trained with 120K training labels](https://www.youtube.com/watch?v=C73QPAovX-E&feature=youtu.be)  
 
 _______________________________________________________________________________________
-MOTIVATED BY SENTDEX pyGTA5 series
+Learnt from SENTDEX pyGTA5 series
 
---->> [Check out his PY_GTA5 Seris](https://www.youtube.com/watch?v=ks4MPfMq8aQ&list=PLQVvvaa0QuDeETZEOy4VdocT7TOjfSA8a)  
+- [Check out his PY_GTA5 Seris](https://www.youtube.com/watch?v=ks4MPfMq8aQ&list=PLQVvvaa0QuDeETZEOy4VdocT7TOjfSA8a)
+- https://www.youtube.com/watch?v=ks4MPfMq8aQ&list=PLQVvvaa0QuDeETZEOy4VdocT7TOjfSA8a  
     
 DIRECTKEYS.PY CODE FROM SENTDEX PYGTA5 SERIES
 
