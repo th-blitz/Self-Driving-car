@@ -18,50 +18,53 @@ def getlabelinfo(datafilepath):
     salist=0
     sdlist=0
     nulllist=0
+    errorlist = 0
 
     lenofdata=0
     paths=glob.glob(f'{datafilepath}\\*.npy')
+    print(paths)
     for datapath in paths:
-
+        
         data = np.load(datapath, allow_pickle=True)#slow
 
-        lenofdata=lenofdata+len(data)
+        lenofdata += len(data)
 
         for elementlist in data:
-            i=elementlist[2]
-            if np.array_equal(i,[1,0,0,0,0,0,0]):
+            i=elementlist[1]
+            if np.array_equal(i,[1,0,0,0]):
                 wlist=wlist+1
-            elif np.array_equal(i,[0,1,0,0,0,0,0]):
+            elif np.array_equal(i,[0,1,0,0]):
                 alist=alist+1
-            elif np.array_equal(i,[0,0,1,0,0,0,0]):
+            elif np.array_equal(i,[0,0,1,0]):
                 slist = slist + 1
-            elif np.array_equal(i,[0,0,0,1,0,0,0]):
+            elif np.array_equal(i,[0,0,0,1]):
                 dlist = dlist + 1
-            elif np.array_equal(i,[0,0,0,0,1,0,0]):
+            elif np.array_equal(i,[1,1,0,0]):
                 walist = walist + 1
-            elif np.array_equal(i,[0,0,0,0,0,1,0]):
+            elif np.array_equal(i,[1,0,0,1]):
                 wdlist = wdlist + 1
-            elif np.array_equal(i,[0,0,0,0,0,0,0]):
+            elif np.array_equal(i,[0,1,1,0]):
                 salist = salist + 1
-            elif np.array_equal(i,[0,0,0,0,0,0,0]):
+            elif np.array_equal(i,[0,0,1,1]):
                 sdlist = sdlist + 1
-            elif np.array_equal(i,[0,0,0,0,0,0,1]):
+            elif np.array_equal(i,[0,0,0,0]):
                 nulllist = nulllist + 1
             else:
-                print('ERROR')
+                errorlist += 1
 
         print('------------------------------------')
         print(lenofdata)
 
-        print(wlist)
-        print(alist)
-        print(slist)
-        print(dlist)
-        print(walist)
-        print(wdlist)
-        print(salist)
-        print(sdlist)
-        print(nulllist)
+        # print(wlist)
+        # print(alist)
+        # print(slist)
+        # print(dlist)
+        # print(walist)
+        # print(wdlist)
+        # print(salist)
+        # print(sdlist)
+        # print(nulllist)
+        # print(errorlist)
 
     listing = {
         'w': wlist,
@@ -72,7 +75,8 @@ def getlabelinfo(datafilepath):
         'wd': wdlist,
         'sa': salist,
         'sd' : sdlist,
-        'none':nulllist
+        'none':nulllist,
+        'errors' : errorlist
     }
     print(listing)
     return

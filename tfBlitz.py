@@ -312,6 +312,9 @@ def train_test_datasets(tfrecordsfilepath,tweaks=None,normalize=False,validation
     val_tffiles=tfpaths[:splitindex]
     train_tffiles=tfpaths[splitindex:]
 
+    print(val_tffiles)
+    print(train_tffiles)
+
     train_dataset=dataset(train_tffiles,tweaks,normalize,stack_X,stack_Y)
     test_dataset=dataset(val_tffiles,tweaks,normalize,stack_X,stack_Y)
 
