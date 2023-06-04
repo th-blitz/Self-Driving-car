@@ -21,8 +21,11 @@ dataset = tfBlitz.dataset(process_data.SAVE_PROCESSED_DATA_FILEPATH,tweaks=tweak
 for x,y in dataset:
     for i in range(tweaks['BATCH_SIZE']):
         cv2.imshow('check_data',np.array(x[i]))  # VIEW EACH FRAMES NORMALIZED AND SHUFFLED
-        cv2.waitKey(1)
         print(np.array(y[i]))  # VIEW THE LABELS OF EACH FRAME
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            cv2.destroyAllWindows()
+            break
+
 
 # 7. TRAINING THE MODEL USING tfBlitz train test dataset generator
 SAVE_MODEL_FILEPATH = MODELS_FOLDER_PATH + tfBlitz.getdateandtime()
