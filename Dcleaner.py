@@ -4,7 +4,7 @@ import cv2
 import keys
 import time
 import glob
-import mytime
+import tfBlitz
 
 
 def getlabelinfo(datafilepath):
@@ -281,7 +281,7 @@ def start2(datafilepath,savefilepath,defSPEED=25,tweaks=None,printable=False):
                 command = input('SAVE ? [y/n] OR REDO ? [r]: ')
                 if command == 'y':
                     print('SAVING...')
-                    filepath = f'{savefilepath}\\cleaned-{lenofdata}-{mytime.getdateandtime(time.time())}.npy'
+                    filepath = f'{savefilepath}\\cleaned-{lenofdata}-{tfBlitz.getdateandtime(time.time())}.npy'
                     with open(f'{savefilepath}\\cleanedinfo.txt', 'a') as f:
                         f.write(path + '\n')
                     np.save(filepath, data2)
